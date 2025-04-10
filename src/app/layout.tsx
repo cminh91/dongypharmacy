@@ -40,12 +40,14 @@ export default function RootLayout({
         <img
           src="/images/trongdong.png"
           alt="Trống đồng"
-          className="fixed top-1/2 right-0 translate-y-[-50%] translate-x-1/2 w-[30rem] md:w-[50rem] opacity-90 pointer-events-none z-0 slow-spin"
+          loading="eager"
+          className="fixed top-1/2 right-0 translate-y-[-50%] translate-x-1/2 w-[30rem] md:w-[50rem] opacity-90 pointer-events-none z-[-10] slow-spin"
         />
         <img
-          src="https://i.pinimg.com/736x/0b/98/b3/0b98b3820625cefb530d17402ed6be71.jpg"
+          src="/images/vn.png"
           alt="Decorative"
-          className="fixed top-1/5 left-55 translate-y-[-25%] -translate-x-1/2 w-[30rem] md:w-[30rem] opacity-20 pointer-events-none z-0"
+          loading="eager"
+          className="fixed top-1/5 left-45 translate-y-[-25%] -translate-x-1/2 w-[25rem] sm:w-[20rem] md:w-[30rem] opacity-20 pointer-events-none z-0 md:left-55"
         />
       </body>
     </html>

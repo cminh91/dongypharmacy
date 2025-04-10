@@ -73,7 +73,7 @@ const FeaturedProducts: FC = () => {
   const products: ProductProps[] = [
     {
       id: '1',
-      name: 'Hoàng Liên Giải Độc Hoàn',
+      name: 'HEPASAKY GOLD',
       image: '/images/hepasaky.png',
       description: 'Giải độc gan, hỗ trợ điều trị viêm gan, vàng da',
       longDescription: 'Sản phẩm được bào chế từ các thảo dược quý giúp thanh lọc cơ thể, tăng cường chức năng gan, hỗ trợ điều trị các bệnh về gan hiệu quả.',
@@ -84,19 +84,7 @@ const FeaturedProducts: FC = () => {
     },
     {
       id: '2',
-      name: 'Thập Toàn Đại Bổ Hoàn',
-      image: '/images/lypasaky.png',
-      description: 'Tăng cường sức khỏe, bồi bổ cơ thể, chống suy nhược',
-      longDescription: 'Bổ khí huyết, tăng cường thể lực, giúp ăn ngon ngủ tốt, phục hồi sức khỏe cho người mới ốm dậy hoặc suy nhược cơ thể.',
-      price: 450000,
-      oldPrice: 530000,
-      rating: 5,
-      reviews: 95,
-      badge: '-15%'
-    },
-    {
-      id: '3',
-      name: 'Thập Toàn Đại Bổ Hoàn1',
+      name: 'LYPASAKY',
       image: '/images/lypasaky.png',
       description: 'Tăng cường sức khỏe, bồi bổ cơ thể, chống suy nhược',
       longDescription: 'Bổ khí huyết, tăng cường thể lực, giúp ăn ngon ngủ tốt, phục hồi sức khỏe cho người mới ốm dậy hoặc suy nhược cơ thể.',

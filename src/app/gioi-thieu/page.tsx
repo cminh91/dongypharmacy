@@ -18,13 +18,13 @@ const AboutPage: FC = () => {
       <div className="bg-green-50 rounded-xl p-8 mb-12">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0">
-            <h1 className="text-4xl font-bold mb-4">Đông Y Pharmacy</h1>
+            <h1 className="text-4xl font-bold mb-4">CÔNG TY TNHH THƯƠNG MẠI KND</h1>
             <p className="text-xl text-gray-600 mb-6">Kết hợp tinh hoa y học cổ truyền với công nghệ hiện đại</p>
             <p className="text-gray-600 mb-6">Chúng tôi cam kết mang đến những sản phẩm thuốc đông y chất lượng cao, được nghiên cứu kỹ lưỡng và sản xuất theo tiêu chuẩn nghiêm ngặt, giúp cải thiện sức khỏe và nâng cao chất lượng cuộc sống của người tiêu dùng.</p>
           </div>
           <div className="md:w-1/2">
             <Image 
-              src="/images/herb-lab.jpg" 
+              src="/images/lypasaky.png" 
               alt="Phòng nghiên cứu Đông Y Pharmacy" 
               width={600}
               height={400}
@@ -40,7 +40,7 @@ const AboutPage: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <Image 
-              src="/images/herb-store.jpg" 
+              src="/images/hepasaky.png" 
               alt="Cửa hàng Đông Y Pharmacy" 
               width={500}
               height={350}

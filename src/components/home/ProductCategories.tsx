@@ -11,11 +11,11 @@ interface CategoryProps {
 
 const CategoryCard: FC<CategoryProps> = ({ id, name, image, description }) => {
   return (
-    <div className="category-card">
+    <div className="category-card flex flex-col items-center">
       <Image 
         src={image} 
         alt={name} 
-        className="w-full h-80 object-contain"
+        className="w-auto h-[400px] mx-auto object-contain"
         width={400}
         height={320}
       />
@@ -61,13 +61,6 @@ const ProductCategories: FC = () => {
             <CategoryCard key={category.id} {...category} />
           ))}
         </div>
-        <Image
-          src="/images/danhmucbg.png"
-          alt="Banner danh mục"
-          width={1280}
-          height={900}
-          className="mx-auto my-8"
-        />
       </div>
     </section>
   );
