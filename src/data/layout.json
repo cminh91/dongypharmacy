@@ -1,0 +1,71 @@
+{
+  "header": {
+    "logo": "/images/logo.jpg",
+    "companyName": "Đông Y Pharmacy",
+    "userName": "Nguyễn Văn A",
+    "isLoggedIn": true,
+    "cartItemCount": 5,
+    "productCategories": [
+      {
+        "id": "dong-y",
+        "label": "Đông Y",
+        "path": "/san-pham/dong-y",
+        "children": [
+          {
+            "id": "thuoc-dong-y",
+            "label": "Thuốc Đông Y",
+            "path": "/san-pham/dong-y/thuoc",
+            "children": [
+              { "id": "thuoc-bo", "label": "Thuốc Bổ", "path": "/san-pham/dong-y/thuoc/thuoc-bo" },
+              { "id": "thuoc-ho", "label": "Thuốc Ho", "path": "/san-pham/dong-y/thuoc/thuoc-ho" },
+              { "id": "thuoc-dau-bung", "label": "Thuốc Đau Bụng", "path": "/san-pham/dong-y/thuoc/dau-bung" }
+            ]
+          },
+          {
+            "id": "thao-duoc",
+            "label": "Thảo Dược",
+            "path": "/san-pham/dong-y/thao-duoc",
+            "children": [
+              { "id": "nam", "label": "Nấm Dược Liệu", "path": "/san-pham/dong-y/thao-duoc/nam" },
+              { "id": "thao-moc", "label": "Thảo Mộc", "path": "/san-pham/dong-y/thao-duoc/thao-moc" },
+              { "id": "tinh-dau", "label": "Tinh Dầu", "path": "/san-pham/dong-y/thao-duoc/tinh-dau" }
+            ]
+          }
+        ]
+      }
+    ],
+    "blogCategories": [
+      {
+        "id": "tin-tuc",
+        "label": "Tin Tức",
+        "path": "/bai-viet/tin-tuc",
+        "children": [
+          { "id": "su-kien", "label": "Sự Kiện", "path": "/bai-viet/tin-tuc/su-kien" },
+          { "id": "khuyen-mai", "label": "Khuyến Mãi", "path": "/bai-viet/tin-tuc/khuyen-mai" }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "companyTitle": "CÔNG TY TNHH THƯƠNG MẠI KND",
+    "companyDescription": "Kết hợp tinh hoa y học cổ truyền với công nghệ hiện đại để tạo ra những sản phẩm thuốc đông y chất lượng cao.",
+    "contactInfo": {
+      "companyName": "CÔNG TY TNHH THƯƠNG MẠI KND",
+      "address": "635 Đường Điện Biên Phủ, Phường 1, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+      "website": "knd.vn",
+      "email": "kndhepasaky@gmail.com",
+      "phone": ["0795428098", "0903682633"],
+      "manufacturer": {
+        "name": "CHI NHÁNH CÔNG TY CỔ PHẦN DƯỢC NATURE VIỆT NAM - NHÀ MÁY NATURE LIFECARE",
+        "address": "Số 21 đường 18, Khu phố 3, Phường Linh Chiểu, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
+      },
+      "origin": "Việt Nam"
+    },
+    "workingHours": "8:00 - 20:00, Thứ 2 - Chủ nhật",
+    "policies": [
+      { "name": "Chính sách bảo mật", "url": "/privacy-policy" },
+      { "name": "Điều khoản dịch vụ", "url": "/terms-of-service" },
+      { "name": "Chính sách vận chuyển", "url": "/shipping-policy" }
+    ]
+  }
+}
