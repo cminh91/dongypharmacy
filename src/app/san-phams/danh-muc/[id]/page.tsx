@@ -1,18 +1,18 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createProductSlug, toSlug } from '@/utils/stringUtils';
 
 interface CategoryPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 const CategoryPage: FC<CategoryPageProps> = ({ params }) => {
-  // Trong thực tế, dữ liệu này sẽ được lấy từ API dựa trên params.id
+  // Next.js 15+ dynamic API: unwrap params bằng React.use()
+  const { id } = React.use(params);
+  // Trong thực tế, dữ liệu này sẽ được lấy từ API dựa trên id
   // Ở đây chúng ta giả định danh mục từ slug tiếng Việt
-  const categorySlug = params.id;
+  const categorySlug = id;
   
   // Chuyển đổi slug thành tên danh mục hiển thị (trong thực tế sẽ lấy từ database)
   const getCategoryNameFromSlug = (slug: string): string => {

@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import Link from 'next/link';
-
+import Image from 'next/image';
 type OrderProps = {
   id: string;
   date: string;
@@ -23,10 +23,12 @@ type OrderProps = {
   }>;
 };
 
-const OrderDetailPage: FC<{ params: { id: string } }> = ({ params }) => {
-  // Trong thực tế, dữ liệu này sẽ được lấy từ API dựa trên params.id
+const OrderDetailPage: FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
+  // Next.js 15+ dynamic API: unwrap params bằng React.use()
+  const { id } = React.use(params);
+  // Trong thực tế, dữ liệu này sẽ được lấy từ API dựa trên id
   const order: OrderProps = {
-    id: params.id,
+    id: id,
     date: '2024-01-15',
     status: 'Đã giao hàng',
     total: 690000,
@@ -94,8 +96,8 @@ const OrderDetailPage: FC<{ params: { id: string } }> = ({ params }) => {
           <div className="space-y-4">
             {order.items.map((item, index) => (
               <div key={index} className="flex items-start space-x-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                <div className="relative w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
+                  <Image src={item.image} alt={item.name} fill className="object-contain" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium">{item.name}</h4>

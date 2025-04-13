@@ -5,9 +5,7 @@ import { FC } from 'react';
 import layoutData from '@/data/layout.json';
 import { FooterData } from '@/types/layout';
 
-interface FooterProps extends Partial<FooterData> {}
-
-const Footer: FC<FooterProps> = (props) => {
+const Footer: FC<Partial<FooterData>> = (props) => {
   const defaultProps = {
     ...layoutData.footer,
     ...props
@@ -17,7 +15,6 @@ const Footer: FC<FooterProps> = (props) => {
     companyTitle,
     companyDescription,
     contactInfo,
-    productCategories,
     workingHours,
     policies
   } = defaultProps;

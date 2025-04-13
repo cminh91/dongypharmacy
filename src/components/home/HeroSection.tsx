@@ -2,6 +2,8 @@
 
 import { FC, useState, useEffect } from 'react';
 import heroData from '../../data/herosction.json';
+import Image from 'next/image';
+ 
 
 interface HeroItem {
   id: string;
@@ -28,7 +30,7 @@ const HeroSection: FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const item = heroData[currentIndex];
+  const item: HeroItem = heroData[currentIndex];
 
   return (
     <section className="relative py-16 md:py-24">
@@ -51,10 +53,9 @@ nhiên đạt chuẩn.
         </div>
         <div className={`md:w-1/2 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="relative">
-            <img
+            <Image
               src={item.image}
               alt={item.name}
-              loading="lazy"
               className="rounded-lg shadow-xl w-full"
               width={600}
               height={400}

@@ -20,7 +20,7 @@ interface ProductCardProps extends ProductProps {
   reverse?: boolean;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ id, name, image, description, longDescription, price, oldPrice, rating, reviews, badge, reverse }) => {
+const ProductCard: FC<ProductCardProps> = ({ id, name, image, description, price, oldPrice, rating, reviews, badge, reverse }) => {
   return (
     <Link href={`/san-pham/${createProductSlug(name, id)}`} className={`group flex ${reverse ? 'flex-col md:flex-row-reverse md:text-right md:justify-end' : 'flex-col md:flex-row'} items-center md:items-center gap-4 rounded-lg overflow-hidden shadow hover:shadow-lg hover:scale-[1.02] transition-all duration-300 p-4`}>
       <div className="relative overflow-hidden flex-shrink-0 w-full md:w-80">

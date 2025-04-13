@@ -1,17 +1,17 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { extractIdFromSlug } from '@/utils/stringUtils';
 
 interface ProductPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 const ProductPage: FC<ProductPageProps> = ({ params }) => {
+  // Next.js 15+ dynamic API: unwrap params bằng React.use()
+  const { id } = React.use(params);
   // Trích xuất ID từ slug tiếng Việt
-  const productId = extractIdFromSlug(params.id);
+  const productId = extractIdFromSlug(id);
 
   // Trong thực tế, dữ liệu này sẽ được lấy từ API dựa trên productId
   const product = {

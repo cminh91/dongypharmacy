@@ -39,9 +39,6 @@ const CartPage: FC = () => {
   
   const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    const updatedItems = cartItems.map(item => 
-      item.id === id ? {...item, quantity: newQuantity} : item
-    );
     // In a real app, you would update the cart state here
   };
   

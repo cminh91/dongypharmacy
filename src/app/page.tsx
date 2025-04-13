@@ -6,7 +6,6 @@ import ProductCategories from '@/components/home/ProductCategories';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import ContactSection from '@/components/home/ContactSection';
-import OrderSection from '@/components/home/OrderSection';
 
 const Home: FC = () => {
   return (

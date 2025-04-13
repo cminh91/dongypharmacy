@@ -1,5 +1,5 @@
 import { FC } from 'react';
-
+import Image from 'next/image';
 interface TestimonialProps {
   name: string;
   role: string;
@@ -12,7 +12,7 @@ const TestimonialCard: FC<TestimonialProps> = ({ name, role, image, content, rat
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex items-center mb-4">
-        <img src={image} alt={name} className="w-12 h-12 rounded-full object-cover mr-4" />
+        <Image src={image} alt={name} className="w-12 h-12 rounded-full object-cover mr-4" width={48} height={48} />
         <div>
           <h4 className="font-bold">{name}</h4>
           <p className="text-gray-600 text-sm">{role}</p>
