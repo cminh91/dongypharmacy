@@ -1,190 +1,352 @@
 'use client';
-import { FC } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { apiFetch } from '@/utils/api';
 
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  salePrice: string;
+  stockQuantity: number;
+  isActive: boolean;
+  imageUrl?: string;
+  images?: string[];
+  categoryId?: string;
+  tags?: string[];
+  isFeatured?: boolean;
+  createdAt?: string;
+}
 
+interface ProductsResponse {
+  products: Product[];
+  total: number;
+}
 
+export default function ProductsPage() {
+  const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({
+    categoryId: '',
+    minPrice: '',
+    maxPrice: '',
+    tag: '',
+    featured: false,
+    sortBy: 'createdAt',
+    sortOrder: 'DESC'
+  });
 
-const ProductsPage: FC = () => {
-  // Mock data for products list
-  const products = [
-    {
-      id: '1',
-      name: 'Hoàng Liên Giải Độc Hoàn',
-      image: '/images/hepasaky.png',
-      category: 'Thuốc bổ gan',
-      price: 320000,
-      stock: 50,
-      status: 'Đang bán'
-    },
-    {
-      id: '2',
-      name: 'Thập Toàn Đại Bổ Hoàn',
-      image: '/images/lypasaky.png',
-      category: 'Thuốc bổ',
-      price: 450000,
-      stock: 35,
-      status: 'Đang bán'
-    },
-    {
-      id: '3',
-      name: 'An Cung Ngưu Hoàng Hoàn',
-      image: '/images/trongdong.png',
-      category: 'Thuốc bổ',
-      price: 580000,
-      stock: 20,
-      status: 'Đang bán'
-    },
-    {
-      id: '4',
-      name: 'Hà Thủ Ô Đỏ',
-      image: '/images/hepasaky.png',
-      category: 'Dược liệu',
-      price: 280000,
-      stock: 0,
-      status: 'Hết hàng'
-    },
-  ];
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        featured: filters.featured.toString()
+      });
+
+      if (search) queryParams.append('search', search);
+      if (filters.categoryId) queryParams.append('categoryId', filters.categoryId);
+      if (filters.minPrice) queryParams.append('minPrice', filters.minPrice);
+      if (filters.maxPrice) queryParams.append('maxPrice', filters.maxPrice);
+      if (filters.tag) queryParams.append('tag', filters.tag);
+
+      console.log('Fetching products with params:', queryParams.toString());
+      const response = await apiFetch(`/api/products?${queryParams.toString()}`);
+      console.log('API Response:', response);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      
+      const data: ProductsResponse = await response.json();
+      console.log('Products data:', data);
+      
+      if (data && Array.isArray(data.products)) {
+        setProducts(data.products);
+        setTotalPages(Math.ceil(data.total / 10)); // Assuming 10 items per page
+      } else {
+        console.error('Invalid data structure:', data);
+        setProducts([]);
+        setTotalPages(1);
+      }
+    } catch (err) {
+      console.error('Error in fetchProducts:', err);
+      setError('Không thể tải danh sách sản phẩm');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [page, search, filters]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
+
+    try {
+      const response = await apiFetch(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      fetchProducts();
+    } catch (err) {
+      setError('Không thể xóa sản phẩm');
+      console.error('Error deleting product:', err);
+    }
+  };
+
+  const formatPrice = (price: string) => {
+    const numericPrice = parseFloat(price);
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(numericPrice);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Quản lý sản phẩm</h1>
-        <Link 
-          href="/admin/products/add" 
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+        <button
+          onClick={() => router.push('/admin/products/add')}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          <i className="fas fa-plus mr-2"></i>Thêm sản phẩm
-        </Link>
+          Thêm sản phẩm
+        </button>
       </div>
 
-      {/* Bộ lọc và tìm kiếm */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
-            <input 
-              type="text" 
-              placeholder="Tên sản phẩm..." 
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+
+      <div className="mb-4 space-y-4">
+        <div className="flex gap-4">
+          <input
+            type="text"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+          />
+          <select
+            value={filters.categoryId}
+            onChange={(e) => setFilters({ ...filters, categoryId: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Tất cả danh mục</option>
+            {/* Add category options here */}
+          </select>
+          <select
+            value={filters.sortBy}
+            onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="createdAt">Mới nhất</option>
+            <option value="price">Giá</option>
+            <option value="name">Tên</option>
+          </select>
+          <select
+            value={filters.sortOrder}
+            onChange={(e) => setFilters({ ...filters, sortOrder: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="DESC">Giảm dần</option>
+            <option value="ASC">Tăng dần</option>
+          </select>
+        </div>
+        <div className="flex gap-4">
+          <input
+            type="number"
+            placeholder="Giá tối thiểu"
+            value={filters.minPrice}
+            onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          />
+          <input
+            type="number"
+            placeholder="Giá tối đa"
+            value={filters.maxPrice}
+            onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          />
+          <input
+            type="text"
+            placeholder="Tag"
+            value={filters.tag}
+            onChange={(e) => setFilters({ ...filters, tag: e.target.value })}
+            className="px-3 py-2 border border-gray-300 rounded-md"
+          />
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={filters.featured}
+              onChange={(e) => setFilters({ ...filters, featured: e.target.checked })}
+              className="rounded"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
-            <select className="w-full border border-gray-300 rounded-md px-3 py-2">
-              <option value="">Tất cả danh mục</option>
-              <option value="thuoc-bo">Thuốc bổ</option>
-              <option value="thuoc-bo-gan">Thuốc bổ gan</option>
-              <option value="duoc-lieu">Dược liệu</option>
-              <option value="gia-vi-dong-y">Gia vị Đông y</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-            <select className="w-full border border-gray-300 rounded-md px-3 py-2">
-              <option value="">Tất cả trạng thái</option>
-              <option value="dang-ban">Đang bán</option>
-              <option value="het-hang">Hết hàng</option>
-              <option value="ngung-ban">Ngừng bán</option>
-            </select>
-          </div>
-          <div className="flex items-end">
-            <button className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-              <i className="fas fa-search mr-2"></i>Tìm kiếm
-            </button>
-          </div>
+            <span>Nổi bật</span>
+          </label>
         </div>
       </div>
 
-      {/* Bảng sản phẩm */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Danh mục</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giá</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn kho</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {products.map((product) => (
-                <tr key={product.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 relative">
-                        <Image 
-                          src={product.image} 
-                          alt={product.name}
-                          fill
-                          className="object-cover rounded-md"
-                        />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">ID: {product.id}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{product.category}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{product.price.toLocaleString()}₫</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{product.stock}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${product.status === 'Đang bán' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {product.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link href={`/admin/products/${product.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
-                      <i className="fas fa-eye"></i>
-                    </Link>
-                    <Link href={`/admin/products/edit/${product.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
-                      <i className="fas fa-edit"></i>
-                    </Link>
-                    <button className="text-red-600 hover:text-red-900">
-                      <i className="fas fa-trash"></i>
-                    </button>
-                  </td>
+      {loading ? (
+        <div className="text-center py-8">Đang tải...</div>
+      ) : (
+        <>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ảnh
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tên
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Giá
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Số lượng
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Trạng thái
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Thao tác
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-700">
-              Hiển thị <span className="font-medium">1</span> đến <span className="font-medium">4</span> của <span className="font-medium">4</span> sản phẩm
-            </div>
-            <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span className="sr-only">Previous</span>
-                  <i className="fas fa-chevron-left"></i>
-                </a>
-                <a href="#" className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                  1
-                </a>
-                <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span className="sr-only">Next</span>
-                  <i className="fas fa-chevron-right"></i>
-                </a>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {products && products.length > 0 ? (
+                  products.map((product) => (
+                    <tr key={product.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="relative w-16 h-16">
+                          {product.imageUrl ? (
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover rounded"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded">
+                              <svg
+                                className="w-8 h-8 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {product.description}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {formatPrice(product.price)}
+                          {product.salePrice && product.salePrice !== '0' && (
+                            <span className="ml-2 text-sm text-red-600">
+                              {formatPrice(product.salePrice)}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {product.stockQuantity}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            product.isActive
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
+                          {product.isActive ? 'Hiển thị' : 'Ẩn'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => router.push(`/admin/products/edit/${product.id}`)}
+                          className="text-blue-600 hover:text-blue-900 mr-4"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                      Không có sản phẩm nào
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {products && products.length > 0 && totalPages > 1 && (
+            <div className="mt-4 flex justify-center">
+              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                      page === pageNum
+                        ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                        : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
               </nav>
             </div>
-          </div>
-        </div>
-      </div>
+          )}
+        </>
+      )}
     </div>
   );
-};
-
-export default ProductsPage;
+}

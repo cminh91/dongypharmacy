@@ -1,0 +1,3019 @@
+Đông Y Pharmacy API Documentation
+The Đông Y Pharmacy REST API documentation
+
+api
+﻿
+
+auth
+﻿
+
+register
+﻿
+
+POST
+Register a new user
+//api/auth/register
+﻿
+
+Body
+raw (json)
+json
+{
+  "fullName": "<string>",
+  "email": "<string>",
+  "password": "<string>",
+  "phoneNumber": "<string>"
+}
+Example
+User successfully registered
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "email": "<string>",
+  "password": "<string>",
+  "phoneNumber": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/auth/register", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+login
+﻿
+
+POST
+Login a user
+//api/auth/login
+﻿
+
+Body
+raw (json)
+json
+{
+  "email": "<string>",
+  "password": "<string>"
+}
+Example
+User successfully logged in
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "email": "<string>",
+  "password": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/auth/login", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+forgot-password
+﻿
+
+POST
+Request password reset
+//api/auth/forgot-password
+﻿
+
+Body
+raw (json)
+json
+{
+  "email": "<string>"
+}
+Example
+Password reset email sent
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "email": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/auth/forgot-password", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+reset-password
+﻿
+
+POST
+Reset password with token
+//api/auth/reset-password
+﻿
+
+Body
+raw (json)
+json
+{
+  "token": "<string>",
+  "password": "<string>"
+}
+Example
+Password successfully reset
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "token": "<string>",
+  "password": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/auth/reset-password", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+social-login
+﻿
+
+POST
+Login via social media
+//api/auth/social-login
+﻿
+
+Example
+User successfully logged in
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "POST",
+  redirect: "follow"
+};
+
+fetch("//api/auth/social-login", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+admin
+﻿
+
+login
+﻿
+
+POST
+Admin login with fullName and password
+//api/auth/admin/login
+API Request Description
+This endpoint allows an admin user to log in.
+
+Request Body
+fullName (text, required): The full name of the admin user.
+password (text, required): The password for the admin user.
+Response
+The response will be in JSON format and will include the following fields:
+
+user (object): An object containing user details including id, full name, email, phone number, role, avatar URL, email verification status, creation and update timestamps.
+accessToken (string): The access token for the logged-in admin user.
+expiresIn (string): The expiration time for the access token.
+JSON Schema for Response
+JSON
+{
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "fullName": {"type": "string"},
+        "email": {"type": "string"},
+        "phoneNumber": {"type": ["string", "null"]},
+        "role": {"type": "string"},
+        "avatarUrl": {"type": ["string", "null"]},
+        "isEmailVerified": {"type": "boolean"},
+        "createdAt": {"type": "string"},
+        "updatedAt": {"type": "string"}
+      }
+    },
+    "accessToken": {"type": "string"},
+    "expiresIn": {"type": "string"}
+  }
+}
+This endpoint allows administrators to log in.
+
+Request Body
+fullName (string) - The full name of the admin user.
+password (string) - The password for the admin user.
+Response
+Upon successful login, the response will include:
+
+user (object) - An object containing user details including id, full name, email, phone number, role, avatar URL, email verification status, creation and update timestamps.
+accessToken (string) - The access token for the authenticated session.
+expiresIn (string) - The expiration time for the access token.
+Example Response
+JSON
+{
+    "user": {
+        "id": "",
+        "fullName": "",
+        "email": "",
+        "phoneNumber": null,
+        "role": "",
+        "avatarUrl": null,
+        "isEmailVerified": true,
+        "createdAt": "",
+        "updatedAt": ""
+    },
+    "accessToken": "",
+    "expiresIn": ""
+}
+Body
+raw (json)
+json
+{
+  "fullName": "Admin",
+  "password": "admin123"
+}
+Example
+Admin successfully logged in
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "password": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/auth/admin/login", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+users
+﻿
+
+me
+﻿
+
+GET
+Get current user profile
+//api/users/me
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return the current user profile
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/users/me", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update current user profile
+//api/users/me
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "fullName": "<string>",
+  "email": "<string>",
+  "phoneNumber": "<string>",
+  "password": "<string>",
+  "role": "admin",
+  "avatarUrl": "<string>",
+  "resetPasswordToken": "<string>",
+  "resetPasswordExpires": "<dateTime>"
+}
+Example
+User profile updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "email": "<string>",
+  "phoneNumber": "<string>",
+  "password": "<string>",
+  "role": "admin",
+  "avatarUrl": "<string>",
+  "resetPasswordToken": "<string>",
+  "resetPasswordExpires": "<dateTime>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/users/me", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+{id}
+﻿
+
+GET
+Get user by id (admin only)
+//api/users/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the user
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/users/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update user (admin only)
+//api/users/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "fullName": "<string>",
+  "email": "<string>",
+  "phoneNumber": "<string>",
+  "password": "<string>",
+  "role": "admin",
+  "avatarUrl": "<string>",
+  "resetPasswordToken": "<string>",
+  "resetPasswordExpires": "<dateTime>"
+}
+Example
+User updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "email": "<string>",
+  "phoneNumber": "<string>",
+  "password": "<string>",
+  "role": "admin",
+  "avatarUrl": "<string>",
+  "resetPasswordToken": "<string>",
+  "resetPasswordExpires": "<dateTime>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/users/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete user (admin only)
+//api/users/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+User deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/users/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all users (admin only)
+//api/users
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return all users
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/users", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+addresses
+﻿
+
+{id}
+﻿
+
+default
+﻿
+
+PUT
+Set an address as default
+//api/addresses/:id/default
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Address set as default successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/addresses/:id/default", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update an address
+//api/addresses/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "fullName": "<string>",
+  "phoneNumber": "<string>",
+  "street": "<string>",
+  "ward": "<string>",
+  "district": "<string>",
+  "city": "<string>",
+  "zipCode": "<string>",
+  "isDefault": "<boolean>"
+}
+Example
+Address updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "phoneNumber": "<string>",
+  "street": "<string>",
+  "ward": "<string>",
+  "district": "<string>",
+  "city": "<string>",
+  "zipCode": "<string>",
+  "isDefault": "<boolean>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/addresses/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete an address
+//api/addresses/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Address deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/addresses/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new address
+//api/addresses
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "fullName": "<string>",
+  "phoneNumber": "<string>",
+  "street": "<string>",
+  "ward": "<string>",
+  "district": "<string>",
+  "city": "<string>",
+  "zipCode": "<string>",
+  "isDefault": "<boolean>"
+}
+Example
+Address created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "fullName": "<string>",
+  "phoneNumber": "<string>",
+  "street": "<string>",
+  "ward": "<string>",
+  "district": "<string>",
+  "city": "<string>",
+  "zipCode": "<string>",
+  "isDefault": "<boolean>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/addresses", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all addresses of the user
+//api/addresses
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return all addresses of the user
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/addresses", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+wishlist
+﻿
+
+{productId}
+﻿
+
+DELETE
+Remove product from wishlist
+//api/wishlist/:productId
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+productId
+<string>
+(Required)
+
+Example
+Product removed from wishlist successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/wishlist/:productId", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Add product to wishlist
+//api/wishlist
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "productId": "<string>"
+}
+Example
+Product added to wishlist successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "productId": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/wishlist", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get user wishlist
+//api/wishlist
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return user wishlist
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/wishlist", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+products
+﻿
+
+featured
+﻿
+
+GET
+Get featured products
+//api/products/featured
+﻿
+
+Example
+Return featured products
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/products/featured", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+{id}
+﻿
+
+reviews
+﻿
+
+POST
+Create a product review
+//api/products/:id/reviews
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "productId": "<string>",
+  "rating": "<number>",
+  "comment": "<string>",
+  "imageUrl": "<string>"
+}
+Example
+Review created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "productId": "<string>",
+  "rating": "<number>",
+  "comment": "<string>",
+  "imageUrl": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/products/:id/reviews", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all reviews for a product
+//api/products/:id/reviews
+﻿
+
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return product reviews
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/products/:id/reviews", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get a product by ID
+//api/products/:id
+﻿
+
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the product
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/products/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update a product (admin only)
+//api/products/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+View More
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "price": "<number>",
+  "salePrice": "<number>",
+  "stockQuantity": "<number>",
+  "imageUrl": "<string>",
+  "additionalImages": [
+    "<string>",
+    "<string>"
+  ],
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "isActive": "<boolean>",
+  "isFeatured": "<boolean>",
+  "specifications": "<string>",
+  "usageInstructions": "<string>",
+  "sku": "<string>",
+  "categoryId": "<string>"
+}
+Example
+Product updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "price": "<number>",
+  "salePrice": "<number>",
+  "stockQuantity": "<number>",
+  "imageUrl": "<string>",
+  "additionalImages": [
+    "<string>",
+    "<string>"
+  ],
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "isActive": "<boolean>",
+  "isFeatured": "<boolean>",
+  "specifications": "<string>",
+  "usageInstructions": "<string>",
+  "sku": "<string>",
+  "categoryId": "<string>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/products/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a product (admin only)
+//api/products/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Product deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/products/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new product (admin only)
+//api/products
+API POST /api/products
+This endpoint allows the client to create a new product by providing the necessary details in the request body.
+
+Request Body
+name (string) - The name of the product.
+description (string) - A brief description of the product.
+price (number) - The price of the product.
+stockQuantity (number) - The quantity of the product in stock.
+categoryId (string) - The category ID to which the product belongs.
+salePrice (number) - The sale price of the product.
+imageUrl (string) - The URL of the main image of the product.
+additionalImages (array of strings) - URLs of additional images for the product.
+tags (array of strings) - Tags associated with the product.
+isActive (boolean) - Indicates whether the product is active.
+isFeatured (boolean) - Indicates whether the product is featured.
+specifications (string) - Specifications of the product.
+usageInstructions (string) - Instructions for using the product.
+sku (string) - Stock Keeping Unit (SKU) of the product.
+Response
+The response for this request is a JSON schema representing the structure of the response object. However, the examples provided are null, so the specific schema cannot be inferred from the examples alone.
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+View More
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "price": "<number>",
+  "stockQuantity": "<number>",
+  "categoryId": "<string>",
+  "salePrice": "<number>",
+  "imageUrl": "<string>",
+  "additionalImages": [
+    "<string>",
+    "<string>"
+  ],
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "isActive": true,
+  "isFeatured": false,
+  "specifications": "<string>",
+  "usageInstructions": "<string>",
+  "sku": "<string>"
+}
+Example
+Product created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "price": "<number>",
+  "stockQuantity": "<number>",
+  "categoryId": "<string>",
+  "salePrice": "<number>",
+  "imageUrl": "<string>",
+  "additionalImages": [
+    "<string>",
+    "<string>"
+  ],
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "isActive": true,
+  "isFeatured": false,
+  "specifications": "<string>",
+  "usageInstructions": "<string>",
+  "sku": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/products", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all products with filtering, sorting, and pagination
+//api/products?search=<string>&categoryId=<string>&minPrice=<number>&maxPrice=<number>&tag=<string>&featured=false&sortBy=createdAt&sortOrder=DESC&page=1&limit=10
+﻿
+
+Query Params
+search
+<string>
+Search term for product name or description
+
+categoryId
+<string>
+Category ID to filter products
+
+minPrice
+<number>
+Minimum price
+
+maxPrice
+<number>
+Maximum price
+
+tag
+<string>
+Tag to filter products
+
+featured
+false
+Only include featured products
+
+sortBy
+createdAt
+Field to sort by
+
+sortOrder
+DESC
+Sort order
+
+page
+1
+Page number for pagination
+
+limit
+10
+Number of items per page
+
+Example
+Return filtered products
+Request
+View More
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/products?search=<string>&categoryId=<string>&minPrice=<number>&maxPrice=<number>&tag=<string>&featured=false&sortBy=createdAt&sortOrder=DESC&page=1&limit=10", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+categories
+﻿
+
+{id}
+﻿
+
+GET
+Get a category by ID with products
+//api/categories/:id
+﻿
+
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the category with products
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/categories/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update a category (admin only)
+//api/categories/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": "<boolean>",
+  "sortOrder": "<number>"
+}
+Example
+Category updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": "<boolean>",
+  "sortOrder": "<number>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/categories/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a category (admin only)
+//api/categories/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Category deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/categories/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new category (admin only)
+//api/categories
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": true,
+  "sortOrder": 0
+}
+Example
+Category created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": true,
+  "sortOrder": 0
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/categories", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all categories
+//api/categories
+﻿
+
+Example
+Return all categories
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/categories", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+cart
+﻿
+
+{itemId}
+﻿
+
+PUT
+Update cart item quantity
+//api/cart/:itemId
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+itemId
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "quantity": "<number>"
+}
+Example
+Cart item updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "quantity": "<number>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/cart/:itemId", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Remove item from cart
+//api/cart/:itemId
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+itemId
+<string>
+(Required)
+
+Example
+Item removed from cart successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/cart/:itemId", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Add product to cart
+//api/cart
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "productId": "<string>",
+  "quantity": "<number>"
+}
+Example
+Product added to cart successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "productId": "<string>",
+  "quantity": "<number>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/cart", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get user cart
+//api/cart
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return user cart with total
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/cart", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+orders
+﻿
+
+{id}
+﻿
+
+cancel
+﻿
+
+PUT
+Cancel an order
+//api/orders/:id/cancel
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Order cancelled successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/orders/:id/cancel", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get order by ID
+//api/orders/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the order
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/orders/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+admin
+﻿
+
+orders
+﻿
+
+{id}
+﻿
+
+status
+﻿
+
+PUT
+Update order status (admin only)
+//api/orders/admin/orders/:id/status
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "status": "pending",
+  "trackingNumber": "<string>",
+  "cancelReason": "<string>"
+}
+Example
+Order status updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "status": "pending",
+  "trackingNumber": "<string>",
+  "cancelReason": "<string>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/orders/admin/orders/:id/status", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all orders (admin only)
+//api/orders/admin/orders
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return all orders
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/orders/admin/orders", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new order
+//api/orders
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+View More
+json
+{
+  "shippingFullName": "<string>",
+  "shippingPhone": "<string>",
+  "shippingAddress": "<string>",
+  "shippingWard": "<string>",
+  "shippingDistrict": "<string>",
+  "shippingCity": "<string>",
+  "items": [
+    "<string>",
+    "<string>"
+  ],
+  "shippingZipCode": "<string>",
+  "promotionCode": "<string>",
+  "note": "<string>",
+  "useCartItems": true
+}
+Example
+Order created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "shippingFullName": "<string>",
+  "shippingPhone": "<string>",
+  "shippingAddress": "<string>",
+  "shippingWard": "<string>",
+  "shippingDistrict": "<string>",
+  "shippingCity": "<string>",
+  "items": [
+    "<string>",
+    "<string>"
+  ],
+  "shippingZipCode": "<string>",
+  "promotionCode": "<string>",
+  "note": "<string>",
+  "useCartItems": true
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/orders", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get user orders
+//api/orders
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return user orders
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/orders", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+promotions
+﻿
+
+{code}
+﻿
+
+GET
+Check if a promotion code is valid
+//api/promotions/:code
+﻿
+
+Path Variables
+code
+<string>
+(Required)
+
+Example
+Return the promotion if valid
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/promotions/:code", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+{id}
+﻿
+
+DELETE
+Delete a promotion (admin only)
+//api/promotions/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Promotion deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/promotions/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new promotion (admin only)
+//api/promotions
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+View More
+json
+{
+  "name": "<string>",
+  "code": "<string>",
+  "type": "percentage",
+  "amount": "<number>",
+  "startDate": "<dateTime>",
+  "endDate": "<dateTime>",
+  "description": "<string>",
+  "minimumPurchase": "<number>",
+  "usageLimit": "<number>",
+  "isActive": true
+}
+Example
+Promotion created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "code": "<string>",
+  "type": "percentage",
+  "amount": "<number>",
+  "startDate": "<dateTime>",
+  "endDate": "<dateTime>",
+  "description": "<string>",
+  "minimumPurchase": "<number>",
+  "usageLimit": "<number>",
+  "isActive": true
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/promotions", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all active promotions
+//api/promotions
+﻿
+
+Example
+Return all active promotions
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/promotions", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+payments
+﻿
+
+{id}
+﻿
+
+GET
+Get payment status
+//api/payments/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the payment status
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/payments/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new payment
+//api/payments
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "orderId": "<string>",
+  "method": "momo",
+  "paymentDetails": {}
+}
+Example
+Payment created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "orderId": "<string>",
+  "method": "momo",
+  "paymentDetails": {}
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/payments", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+reviews
+﻿
+
+{id}
+﻿
+
+PUT
+Update a review
+//api/reviews/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "rating": "<number>",
+  "comment": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": "<boolean>"
+}
+Example
+Review updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "rating": "<number>",
+  "comment": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": "<boolean>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/reviews/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a review
+//api/reviews/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Review deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/reviews/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+posts
+﻿
+
+{slug}
+﻿
+
+GET
+Get a blog post by slug
+//api/posts/:slug
+﻿
+
+Path Variables
+slug
+<string>
+(Required)
+
+Example
+Return the post
+Request
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/posts/:slug", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+{id}
+﻿
+
+PUT
+Update a blog post (admin only)
+//api/posts/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+View More
+json
+{
+  "title": "<string>",
+  "slug": "<string>",
+  "content": "<string>",
+  "summary": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": "<boolean>",
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "authorName": "<string>"
+}
+Example
+Post updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "title": "<string>",
+  "slug": "<string>",
+  "content": "<string>",
+  "summary": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": "<boolean>",
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "authorName": "<string>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/posts/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a blog post (admin only)
+//api/posts/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Post deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/posts/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new blog post (admin only)
+//api/posts
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+View More
+json
+{
+  "title": "<string>",
+  "slug": "<string>",
+  "content": "<string>",
+  "summary": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": true,
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "authorName": "<string>"
+}
+Example
+Post created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "title": "<string>",
+  "slug": "<string>",
+  "content": "<string>",
+  "summary": "<string>",
+  "imageUrl": "<string>",
+  "isPublished": true,
+  "tags": [
+    "<string>",
+    "<string>"
+  ],
+  "authorName": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/posts", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all published blog posts
+//api/posts?search=<string>&tag=<string>&limit=<number>&page=<number>
+﻿
+
+Query Params
+search
+<string>
+Search term
+
+tag
+<string>
+Filter by tag
+
+limit
+<number>
+Number of posts per page
+
+page
+<number>
+Page number
+
+Example
+Return published posts
+Request
+View More
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+fetch("//api/posts?search=<string>&tag=<string>&limit=<number>&page=<number>", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+contact
+﻿
+
+{id}
+﻿
+
+read
+﻿
+
+PUT
+Mark contact as read (admin only)
+//api/contact/:id/read
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Contact marked as read
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/contact/:id/read", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+replied
+﻿
+
+PUT
+Mark contact as replied with notes (admin only)
+//api/contact/:id/replied
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Contact marked as replied
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/contact/:id/replied", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a contact submission (admin only)
+//api/contact/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Contact deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/contact/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Submit a contact form
+//api/contact
+﻿
+
+Body
+raw (json)
+json
+{
+  "name": "<string>",
+  "email": "<string>",
+  "subject": "<string>",
+  "message": "<string>",
+  "phoneNumber": "<string>"
+}
+Example
+Contact form submitted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "email": "<string>",
+  "subject": "<string>",
+  "message": "<string>",
+  "phoneNumber": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/contact", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all contact submissions (admin only)
+//api/contact
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return all contact submissions
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/contact", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+subscriptions
+﻿
+
+{id}
+﻿
+
+DELETE
+Unsubscribe an email (admin only)
+//api/subscriptions/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Email unsubscribed successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/subscriptions/:id", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Subscribe to newsletter
+//api/subscriptions
+﻿
+
+Body
+raw (json)
+json
+{
+  "email": "<string>",
+  "source": "<string>"
+}
+Example
+Email subscribed successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "email": "<string>",
+  "source": "<string>"
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("//api/subscriptions", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+201 Created
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all subscribed emails (admin only)
+//api/subscriptions
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Example
+Return all subscribed emails
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+fetch("//api/subscriptions", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.

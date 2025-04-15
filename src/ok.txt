@@ -1,0 +1,292 @@
+GET
+Get all products with filtering, sorting, and pagination
+//api/products?search=<string>&categoryId=<string>&minPrice=<number>&maxPrice=<number>&tag=<string>&featured=false&sortBy=createdAt&sortOrder=DESC&page=1&limit=10
+﻿
+
+Query Params
+search
+<string>
+Search term for product name or description
+
+categoryId
+<string>
+Category ID to filter products
+
+minPrice
+<number>
+Minimum price
+
+maxPrice
+<number>
+Maximum price
+
+tag
+<string>
+Tag to filter products
+
+featured
+false
+Only include featured products
+
+sortBy
+createdAt
+Field to sort by
+
+sortOrder
+DESC
+Sort order
+
+page
+1
+Page number for pagination
+
+limit
+10
+Number of items per page
+
+Example
+Return filtered products
+Request
+View More
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/products?search=<string>&categoryId=<string>&minPrice=<number>&maxPrice=<number>&tag=<string>&featured=false&sortBy=createdAt&sortOrder=DESC&page=1&limit=10", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+categories
+﻿
+
+{id}
+﻿
+
+GET
+Get a category by ID with products
+//api/categories/:id
+﻿
+
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Return the category with products
+Request
+View More
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/categories/:id", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+PUT
+Update a category (admin only)
+//api/categories/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Body
+raw (json)
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": "<boolean>",
+  "sortOrder": "<number>"
+}
+Example
+Category updated successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": "<boolean>",
+  "sortOrder": "<number>"
+});
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/categories/:id", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+DELETE
+Delete a category (admin only)
+//api/categories/:id
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Path Variables
+id
+<string>
+(Required)
+
+Example
+Category deleted successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer <token>");
+
+const requestOptions = {
+  method: "DELETE",
+  headers: myHeaders,
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/categories/:id", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+200 OK
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+POST
+Create a new category (admin only)
+//api/categories
+﻿
+
+Authorization
+Bearer Token
+Token
+{{bearerToken}}
+Body
+raw (json)
+json
+{
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": true,
+  "sortOrder": 0
+}
+Example
+Category created successfully
+Request
+View More
+JavaScript - Fetch
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", "Bearer <token>");
+
+const raw = JSON.stringify({
+  "name": "<string>",
+  "description": "<string>",
+  "imageUrl": "<string>",
+  "isActive": true,
+  "sortOrder": 0
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/categories", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+201 CREATED
+Response
+Body
+Headers (0)
+No response body
+This request doesn't return any response body.
+GET
+Get all categories
+//api/categories
+﻿
+
+Example
+Return all categories
+Request
+View More
+JavaScript - Fetch
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+try {
+  const response = await fetch("//api/categories", requestOptions);
+  const result = await response.text();
+  console.log(result)
+} catch (error) {
+  console.error(error);
+};
+200 OK
+Response
+Body
+Headers (0)

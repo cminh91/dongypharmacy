@@ -1,96 +1,143 @@
 "use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import CategoryForm from '@/components/admin/CategoryForm';
-import type { CategoryData } from '@/components/admin/CategoryForm';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-interface EditCategoryClientProps {
+type Category = {
   id: string;
-}
+  name: string;
+  imageUrl: string;
+  slug: string;
+  description: string;
+  productCount: number;
+  isActive: boolean;
+  sortOrder: number;
+};
 
-const EditCategoryClient: React.FC<EditCategoryClientProps> = ({ id }) => {
+export default function EditCategoryClient({ category }: { category: Category }) {
   const router = useRouter();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [name, setName] = useState(category.name);
+  const [description, setDescription] = useState(category.description);
+  const [imageUrl, setImageUrl] = useState(category.imageUrl);
+  const [isActive, setIsActive] = useState(category.isActive);
+  const [sortOrder, setSortOrder] = useState(category.sortOrder);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Dữ liệu mẫu, cần thay bằng API call để lấy thông tin danh mục theo ID
-  const initialValues: CategoryData = {
-    name: 'Thuốc bổ',
-    slug: 'thuoc-bo',
-    description: 'Các loại thuốc bổ dưỡng cơ thể',
-    status: 'hien-thi',
-  };
-
-  const handleSubmit = async (data: CategoryData) => {
+  // Import động apiFetch để tránh lỗi khi build server
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      console.log('Sửa danh mục:', { ...data, id });
-      // Gọi API sửa danh mục ở đây
-      // router.refresh();
-    } catch (error) {
-      console.error('Lỗi khi sửa danh mục:', error);
+      const { apiFetch } = await import("../../utils/api");
+      const res = await apiFetch(`/api/categories/${category.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          description,
+          imageUrl,
+          isActive,
+          sortOrder: Number(sortOrder),
+        }),
+      });
+      if (!res.ok) throw new Error("Lỗi khi cập nhật danh mục");
+      router.push("/admin/categories");
+    } catch (err: any) {
+      setError(err.message || "Lỗi không xác định");
     } finally {
-      setIsDeleting(false);
+      setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    setIsDeleting(true);
+    if (!confirm("Bạn có chắc chắn muốn xóa danh mục này?")) return;
+    setLoading(true);
+    setError(null);
     try {
-      console.log('Xóa danh mục:', id);
-      // Gọi API xóa danh mục ở đây
-      router.push('/admin/categories');
+      const { apiFetch } = await import("../../utils/api");
+      const res = await apiFetch(`/api/categories/${category.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Lỗi khi xóa danh mục");
+      router.push("/admin/categories");
+    } catch (err: any) {
+      setError(err.message || "Lỗi không xác định");
     } finally {
-      setIsDeleting(false);
-      setShowDeleteConfirm(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Sửa danh mục</h1>
-      <div className="flex justify-between items-center mb-4">
-        <Link href="/admin/categories" className="text-blue-500 hover:underline">
-          {`<< Quay lại trang danh mục`}
-        </Link>
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-4">
+      <div>
+        <label className="block text-sm font-medium mb-1">Tên danh mục</label>
+        <input
+          type="text"
+          className="w-full border border-gray-300 rounded-md px-3 py-2"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1">Mô tả</label>
+        <textarea
+          className="w-full border border-gray-300 rounded-md px-3 py-2"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          rows={3}
+        />
+      </div>
+      {/* <div>
+        <label className="block text-sm font-medium mb-1">Ảnh (URL)</label>
+        <input
+          type="text"
+          className="w-full border border-gray-300 rounded-md px-3 py-2"
+          value={imageUrl}
+          onChange={e => setImageUrl(e.target.value)}
+        />
+      </div> */}
+      <div className="flex items-center space-x-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Thứ tự</label>
+          <input
+            type="number"
+            className="w-24 border border-gray-300 rounded-md px-3 py-2"
+            value={sortOrder}
+            onChange={e => setSortOrder(Number(e.target.value))}
+          />
+        </div>
+        <div className="flex items-center mt-6">
+          <input
+            type="checkbox"
+            id="isActive"
+            checked={isActive}
+            onChange={e => setIsActive(e.target.checked)}
+            className="mr-2"
+          />
+          <label htmlFor="isActive" className="text-sm">Hiển thị</label>
+        </div>
+      </div>
+      {error && <div className="text-red-600">{error}</div>}
+      <div className="flex justify-between">
         <button
-          onClick={() => setShowDeleteConfirm(true)}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          disabled={loading}
+        >
+          {loading ? "Đang lưu..." : "Lưu thay đổi"}
+        </button>
+        <button
+          type="button"
+          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+          onClick={handleDelete}
+          disabled={loading}
         >
           Xóa danh mục
         </button>
       </div>
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <CategoryForm onSubmit={handleSubmit} initialValues={initialValues} />
-      </div>
-
-      {/* Dialog xác nhận xóa */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold mb-4">Xác nhận xóa</h3>
-            <p className="mb-6">Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác.</p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50"
-              >
-                {isDeleting ? 'Đang xóa...' : 'Xác nhận xóa'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    </form>
   );
-};
-
-export default EditCategoryClient;
+}

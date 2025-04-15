@@ -1,262 +1,272 @@
 'use client';
-import { FC, useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-const AddProductPage: FC = () => {
+import { adminProductService } from '@/services/admin/productService';
+import SingleImageUpload from '@/components/ui/SingleImageUpload';
+import MultipleImageUpload from '@/components/ui/MultipleImageUpload';
+import { apiFetch } from '@/utils/api';
+
+export default function AddProductPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
+  const [additionalImageFiles, setAdditionalImageFiles] = useState<File[]>([]);
+
   const [formData, setFormData] = useState({
     name: '',
-    category: '',
-    price: '',
-    originalPrice: '',
-    stock: '',
-    status: 'Đang bán',
     description: '',
-    shortDescription: '',
-    usage: '',  // Removed ingredients field
-    metaTitle: '',
-    metaDescription: '',
+    price: 0,
+    salePrice: 0,
+    stockQuantity: 0,
+    imageUrl: '',
+    additionalImages: [] as string[],
+    categoryId: '',
+    isActive: true,
+    isFeatured: false,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleMainImageChange = (file: File | null) => {
+    setMainImageFile(file);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const filesArray = Array.from(e.target.files);
-      
-      // Preview the first image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(filesArray[0]);
+  const handleAdditionalImagesChange = (files: File[]) => {
+    setAdditionalImageFiles(files);
+  };
+
+  const handleImageChange = async (file: File | null) => {
+    if (!file) {
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: ''
+      }));
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('images', file);
+
+      const response = await apiFetch('/api/upload-images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+      if (data.imageUrls && data.imageUrls.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: data.imageUrls[0]
+        }));
+      }
+    } catch (err) {
+      console.error('Error uploading image:', err);
+      // Handle error appropriately
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setSubmitting(false);
-      alert('Sản phẩm đã được thêm thành công!');
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Upload main image
+      let imageUrl = '';
+      if (mainImageFile) {
+        const formData = new FormData();
+        formData.append('images', mainImageFile);
+        const response = await apiFetch('/api/upload-images', {
+          method: 'POST',
+          body: formData,
+        });
+        const result = await response.json();
+        if (result.imageUrls && result.imageUrls.length > 0) {
+          imageUrl = result.imageUrls[0];
+        }
+      }
+
+      // Upload additional images
+      let additionalImages: string[] = [];
+      if (additionalImageFiles.length > 0) {
+        const formData = new FormData();
+        additionalImageFiles.forEach(file => {
+          formData.append('images', file);
+        });
+        const response = await apiFetch('/api/upload-images', {
+          method: 'POST',
+          body: formData,
+        });
+        const result = await response.json();
+        if (result.imageUrls) {
+          additionalImages = result.imageUrls;
+        }
+      }
+
+      // Create product
+      const productData = {
+        ...formData,
+        imageUrl,
+        additionalImages,
+      };
+
+      await adminProductService.createProduct(productData);
       router.push('/admin/products');
-    }, 1000);
+    } catch (err) {
+      console.error('Error creating product:', err);
+      setError('Có lỗi xảy ra khi tạo sản phẩm');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex items-center mb-6">
-        <Link href="/admin/products" className="text-blue-600 hover:text-blue-800 mr-2">
-          <i className="fas fa-arrow-left"></i> Quay lại
-        </Link>
-        <h1 className="text-2xl font-bold">Thêm sản phẩm mới</h1>
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">Thêm sản phẩm mới</h1>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold">Thông tin cơ bản</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Ảnh chính
+          </label>
+          <SingleImageUpload onChange={handleMainImageChange} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Ảnh phụ
+          </label>
+          <MultipleImageUpload onChange={handleAdditionalImagesChange} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Tên sản phẩm
+          </label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Mô tả
+          </label>
+          <textarea
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            rows={4}
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Giá
+            </label>
+            <input
+              type="number"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
           </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tên sản phẩm <span className="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Danh mục <span className="text-red-500">*</span></label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                >
-                  <option value="">Chọn danh mục</option>
-                  <option value="Thuốc bổ">Thuốc bổ</option>
-                  <option value="Thuốc bổ gan">Thuốc bổ gan</option>
-                  <option value="Dược liệu">Dược liệu</option>
-                  <option value="Gia vị Đông y">Gia vị Đông y</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Giá bán (₫) <span className="text-red-500">*</span></label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Giá gốc (₫)</label>
-                <input
-                  type="number"
-                  name="originalPrice"
-                  value={formData.originalPrice}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Số lượng tồn kho <span className="text-red-500">*</span></label>
-                <input
-                  type="number"
-                  name="stock"
-                  value={formData.stock}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái <span className="text-red-500">*</span></label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                >
-                  <option value="Đang bán">Đang bán</option>
-                  <option value="Hết hàng">Hết hàng</option>
-                  <option value="Ngừng bán">Ngừng bán</option>
-                </select>
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
-                <input
-                  type="text"
-                  name="shortDescription"
-                  value={formData.shortDescription}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả chi tiết</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                ></textarea>
-              </div>
-            </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Giá khuyến mãi
+            </label>
+            <input
+              type="number"
+              value={formData.salePrice}
+              onChange={(e) => setFormData({ ...formData, salePrice: parseFloat(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold">Hình ảnh sản phẩm</h2>
-          </div>
-          <div className="p-6">
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Tải lên hình ảnh</label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
-              <p className="mt-1 text-sm text-gray-500">PNG, JPG, GIF tối đa 5MB</p>
-            </div>
-            
-            {imagePreview && (
-              <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Xem trước</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="relative h-32 w-full rounded-lg overflow-hidden border">
-                    <Image src={imagePreview} alt="Preview" fill className="object-cover" />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-    
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold">Thông tin SEO</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                <input
-                  type="text"
-                  name="metaTitle"
-                  value={formData.metaTitle}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                <textarea
-                  name="metaDescription"
-                  value={formData.metaDescription}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                ></textarea>
-              </div>
-            </div>
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Số lượng
+          </label>
+          <input
+            type="number"
+            value={formData.stockQuantity}
+            onChange={(e) => setFormData({ ...formData, stockQuantity: parseInt(e.target.value) })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            required
+          />
         </div>
 
-        <div className="flex justify-end space-x-3">
-          <Link 
-            href="/admin/products" 
+        {/* <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Danh mục
+          </label>
+          <input
+            type="text"
+            value={formData.categoryId}
+            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div> */}
+
+        <div className="flex items-center space-x-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.isActive}
+              onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+              className="mr-2"
+            />
+            <span className="text-sm text-gray-700">Hiển thị</span>
+          </label>
+
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.isFeatured}
+              onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+              className="mr-2"
+            />
+            <span className="text-sm text-gray-700">Nổi bật</span>
+          </label>
+        </div>
+
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
             Hủy
-          </Link>
+          </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
-            disabled={submitting}
+            disabled={isSubmitting}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {submitting ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Đang xử lý...
-              </>
-            ) : (
-              'Thêm sản phẩm'
-            )}
+            {isSubmitting ? 'Đang lưu...' : 'Lưu'}
           </button>
         </div>
       </form>
     </div>
   );
-};
-
-export default AddProductPage;
+}
